@@ -1,5 +1,7 @@
 # 163-music
 
+**本项目仅在开发机（Gentoo）上对AppImage格式包进行了测试，如果发现问题烦请及时提Issues反馈**
+
 [![Build](https://github.com/SCX-snow/163-music/actions/workflows/build.yml/badge.svg)](https://github.com/SCX-snow/163-music/actions/workflows/build.yml)
 
 [中文文档](./README_zh.md)
