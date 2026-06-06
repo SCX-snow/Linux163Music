@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+exec "$APPDIR/163-music" --ozone-platform=x11 "$@"
