@@ -1,3 +1,6 @@
+packages:
+  - "."
+
 allowBuilds:
   dbus: true
   electron: true
