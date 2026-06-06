@@ -1,8 +1,8 @@
 # 163音乐
 
-[![Build](https://github.com/SCX-snow/163-music/actions/workflows/build.yml/badge.svg)](https://github.com/SCX-snow/163-music/actions/workflows/build.yml)
-
 [English Documentation](./README.md)
+
+**本项目仅在开发机（Gentoo）上对AppImage格式包进行了测试，如果发现问题烦请及时提Issues反馈**
 
 Linux 桌面端的 [163 音乐](https://music.163.com) 播放器，封装官方 Web 播放器，提供原生 Linux 桌面集成。
 
