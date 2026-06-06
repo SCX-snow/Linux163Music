@@ -1,0 +1,52 @@
+{
+  "name": "163-music",
+  "version": "0.1.0",
+  "description": "163音乐 Linux 桌面客户端 — 基于 Electron 封装官方 Web 播放器",
+  "author": "SCX-snow <slctx-x-e-1@foxmail.com>",
+  "homepage": "https://github.com/SCX-snow/163-music",
+  "main": "./out/main/index.js",
+  "scripts": {
+    "dev": "electron-vite dev -- --ozone-platform=x11",
+    "build": "electron-vite build",
+    "postinstall": "electron-builder install-app-deps",
+    "lint": "tsc --noEmit",
+    "typecheck": "tsc --noEmit",
+    "preview": "electron-vite preview",
+    "release": "pnpm build && electron-builder --linux deb rpm AppImage --publish never"
+  },
+  "build": {
+    "appId": "163-music",
+    "productName": "163-music",
+    "directories": {
+      "output": "dist"
+    },
+    "linux": {
+      "target": [
+        "deb",
+        "rpm",
+        "AppImage"
+      ],
+      "category": "Audio",
+      "executableArgs": [
+        "--ozone-platform=x11"
+      ]
+    },
+    "deb": {
+      "depends": [
+        "libdbus-1-3"
+      ]
+    }
+  },
+  "dependencies": {
+    "@electron-toolkit/preload": "^3.0.2",
+    "@electron-toolkit/utils": "^4.0.0",
+    "@homebridge/dbus-native": "^0.7.6"
+  },
+  "devDependencies": {
+    "@types/node": "^25.9.1",
+    "electron": "^42.0.0",
+    "electron-builder": "^26.8.1",
+    "electron-vite": "^5.0.0",
+    "typescript": "^6.0.3"
+  }
+}

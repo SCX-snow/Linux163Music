@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="zh-CN" xml:lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>Lyrics</title>
+    <style>
+      :root {
+        --lyric-size: 20px;
+        --lyric-color: #ffffff;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: transparent;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        color: #e0e0e0;
+        user-select: none;
+        margin: 0;
+        padding: 0;
+      }
+      body.locked {
+        pointer-events: none;
+      }
+      body:not(.locked) {
+        -webkit-app-region: drag;
+        box-shadow: inset 0 0 30px rgba(255, 255, 255, 0.06);
+      }
+      body:not(.locked) #container {
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 6px;
+      }
+      .lyric-line {
+        font-size: var(--lyric-size);
+        line-height: 1.8;
+        padding: 3px 0;
+        color: rgba(255, 255, 255, 0.4);
+        transition:
+          color 0.1s ease,
+          font-size 0.1s ease,
+          transform 0.1s ease,
+          opacity 0.1s ease;
+        will-change: transform, opacity;
+      }
+      .lyric-line.current {
+        color: var(--lyric-color);
+        font-size: calc(var(--lyric-size) + 4px);
+        font-weight: 600;
+        transform: translateY(-2px);
+      }
+      .lyric-line.prev {
+        color: rgba(255, 255, 255, 0.65);
+        opacity: 0.9;
+      }
+      #empty-msg {
+        color: rgba(255, 255, 255, 0.4);
+        font-size: 20px;
+      }
+      #container {
+        text-align: center;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        transition: transform 0.1s ease;
+      }
+      #viewport {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        position: relative;
+      }
+    </style>
+  </head>
+  <body class="locked">
+    <div id="viewport">
+      <div id="container">
+        <div id="empty-msg">等待播放...</div>
+      </div>
+    </div>
+    <script>
+      const { ipcRenderer } = require("electron");
+      const container = document.getElementById("container");
+      let lines = [];
+      let currentIndex = -1;
+      var lineEls = [];
+      var LINE_HEIGHT = 0;
+
+      function buildLyricElements() {
+        container.innerHTML = "";
+        lineEls = [];
+        for (const element of lines) {
+          var el = document.createElement("div");
+          el.className = "lyric-line";
+          el.textContent = element.text;
+          container.appendChild(el);
+          lineEls.push(el);
+        }
+        if (lineEls.length > 0) {
+          LINE_HEIGHT = lineEls[0].offsetHeight || 40;
+        }
+      }
+
+      function updateHighlight() {
+        for (var i = 0; i < lineEls.length; i++) {
+          var el = lineEls[i];
+          el.className = "lyric-line";
+          if (i === currentIndex) el.classList.add("current");
+          else if (i < currentIndex) el.classList.add("prev");
+        }
+        var vpH = document.getElementById("viewport").clientHeight;
+        var targetY = currentIndex * LINE_HEIGHT + LINE_HEIGHT / 2 - vpH / 2;
+        container.style.transform = "translateY(" + -targetY + "px)";
+      }
+
+      function findCurrentLine(lines, positionMs) {
+        if (lines.length === 0) return -1;
+        if (positionMs < lines[0].time) return -1;
+        for (var i = lines.length - 1; i >= 0; i--) {
+          if (positionMs >= lines[i].time) return i;
+        }
+        return -1;
+      }
+
+      ipcRenderer.on("set-locked", function (_event, locked) {
+        document.body.classList.toggle("locked", locked);
+      });
+
+      ipcRenderer.on("set-style", function (_event, fontSize, color) {
+        var root = document.documentElement;
+        root.style.setProperty("--lyric-size", fontSize);
+        root.style.setProperty("--lyric-color", color);
+      });
+
+      ipcRenderer.on("set-lyrics", function (_event, newLines) {
+        lines = newLines || [];
+        currentIndex = lines.length > 0 ? 0 : -1;
+        if (lines.length > 0) {
+          buildLyricElements();
+          updateHighlight();
+        } else {
+          container.innerHTML = '<div id="empty-msg">等待播放...</div>';
+          lineEls = [];
+        }
+      });
+
+      ipcRenderer.on("set-position", function (_event, timeMs) {
+        if (lines.length === 0) return;
+        var idx = findCurrentLine(lines, timeMs);
+        if (idx !== currentIndex) {
+          currentIndex = idx;
+          updateHighlight();
+        }
+      });
+    </script>
+  </body>
+</html>

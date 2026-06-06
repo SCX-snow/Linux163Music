@@ -1,5 +1,5 @@
-# Reasonix project memory (not part of source)
-REASONIX.md
+# Reasonix project memory
+AGENTS.md
 
 # Dependencies
 node_modules/
@@ -8,12 +8,19 @@ node_modules/
 dist/
 out/
 
-# OS files
-.DS_Store
-Thumbs.db
+# Electron
+*.js.map
 
 # IDE
 .vscode/
 .idea/
 *.swp
 *.swo
+
+# OS
+.DS_Store
+Thumbs.db
+/.reasonix/
+
+# CodeGragh
+.codegraph/

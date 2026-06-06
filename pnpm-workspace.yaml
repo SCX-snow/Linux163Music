@@ -1,0 +1,6 @@
+allowBuilds:
+  dbus: true
+  electron: true
+  electron-winstaller: true
+  esbuild: true
+  usocket: true
