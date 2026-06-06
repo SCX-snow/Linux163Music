@@ -108,7 +108,7 @@ src/
 
 ## Tech Stack
 
-- **Electron** >= 35.x
+- **Electron** >= 42.x
 - **TypeScript** >= 5.x
 - **electron-vite** >= 3.x
 - **pnpm** >= 9.x
