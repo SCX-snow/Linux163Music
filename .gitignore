@@ -1,6 +1,3 @@
-# Reasonix project memory
-AGENTS.md
-
 # Dependencies
 node_modules/
 
@@ -20,7 +17,6 @@ out/
 # OS
 .DS_Store
 Thumbs.db
-/.reasonix/
 
 # CodeGragh
 .codegraph/
